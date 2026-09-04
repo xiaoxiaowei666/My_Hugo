@@ -1,0 +1,5 @@
+# Hugo 构建产物：不提交源码仓库，由 publish.sh 负责发布
+/public/
+
+# Hugo 锁文件
+.hugo_build.lock
