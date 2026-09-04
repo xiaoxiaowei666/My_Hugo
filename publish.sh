@@ -8,6 +8,10 @@
 set -e
 cd "$(dirname "$0")"   # 无论从哪个目录运行，都以项目根目录为基准
 
+# 清空旧的构建产物（保留 public/.git），保证线上与最新内容完全一致
+# Hugo 不会自动删除"已删除文章"留下的旧页面，必须每次先清空再构建
+find public -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+
 echo ">> Building site with Hugo..."
 hugo
 
