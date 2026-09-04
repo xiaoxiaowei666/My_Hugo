@@ -33,4 +33,16 @@ echo ">> Pushing to xiaoxiaowei666.github.io..."
 git push origin main
 
 cd ..
+
+# 3. 同步源码仓库（My_Hugo），避免源码改动丢失
+git add -A
+git branch -M main
+if git diff --cached --quiet; then
+    echo ">> 源码无新改动，跳过提交。"
+else
+    git commit -m "$MSG"
+    git push origin main
+    echo ">> 源码已同步到 My_Hugo ✓"
+fi
+
 echo ">> Done! 稍等 1~2 分钟即可访问 https://xiaoxiaowei666.github.io"
