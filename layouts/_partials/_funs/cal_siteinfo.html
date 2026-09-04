@@ -1,0 +1,25 @@
+{{/** Calculate some information for site operation **/}}
+{{ $scratch := newScratch }}
+{{ $pages := (where .Page.Site.RegularPages "Section" "in" .Site.Params.mainSections).ByLastmod.Reverse }}
+
+{{ range $pages }}
+  {{ $scratch.Add "totalWords" .WordCount }}
+  {{ $scratch.Add "totalTimes" .ReadingTime }}
+{{ end }}
+
+{{ range first 1 $pages }}
+  {{ $lastMod := default .Date .Lastmod }}
+  {{ $scratch.Set "first" $lastMod }}
+{{ end }}
+{{ range last 1 $pages }}
+  {{ $scratch.Set "last" .Date }}
+{{ end }}
+
+{{/* 无正式文章时的兜底日期，避免侧栏"已运行"显示 NaN 天（严格 ISO8601，JS 各浏览器可解析） */}}
+{{ if not ($scratch.Get "last") }}
+  {{ $fallback := (time (default "2026-09-04T09:00:00+08:00" .Site.Params.lastPublishDate)).Format "2006-01-02T15:04:05Z07:00" }}
+  {{ $scratch.Set "last" $fallback }}
+  {{ $scratch.Set "first" $fallback }}
+{{ end }}
+
+{{ return $scratch }}

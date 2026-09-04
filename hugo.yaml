@@ -154,6 +154,8 @@ params:
   subtitle: 个人技术博客
   description: xiao wei 的个人技术博客
   keywords: Hugo,NexT,个人博客,技术
+  # 网站开始运行日期（侧栏"已运行"统计，无正式文章时兜底）
+  lastPublishDate: '2026-09-04T09:00:00+08:00'
 
   # 不同尺寸站点图标
   # Different size of favicon

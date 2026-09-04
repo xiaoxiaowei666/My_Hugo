@@ -1,0 +1,112 @@
+{{ $ms := .Site.Params.menuSets }}
+{{ $curP := .Page }}
+<nav class="site-nav">
+  <ul class="main-menu menu">
+  {{ range .Site.Menus.main }}
+    {{ $active := $curP.IsMenuCurrent .Menu . }}
+    <li class="menu-item menu-item-{{ .Identifier }}">
+      <a href="{{ .URL | relLangURL }}" class="{{ if .HasChildren }}menus-parent{{ end }} hvr-icon-pulse {{if $active }} menu-item-active{{ end }}" rel="section">
+        {{ if $ms.icons }}<i class="fa fa-{{ .Pre }} hvr-icon"></i>{{ end }}{{ .Name }}
+        {{ if .HasChildren }}<span class="menu-item-shrink-icon"><i class="fa fa-angle-right"></i></span>{{ end }}
+        {{ if and $ms.badges (eq .Identifier "archives") }}
+          <span class="badge">{{ $.Scratch.Get "postsCount" }}</span>
+        {{ end }}
+      </a>
+      {{ if .HasChildren }}
+      <ul class="menu-children">
+      {{ range .Children }}
+      {{ $active = $curP.IsMenuCurrent .Menu . }}
+        <li class="menu-child-item">
+          <a href="{{ .URL | relLangURL }}" class="hvr-icon-pulse {{if $active }}menu-item-active{{ end }}" rel="section">
+            <i class="fa hvr-icon"></i>{{ .Name }}
+          </a>
+        </li>
+      {{ end }}
+      </ul>
+      {{ end }}
+    </li>
+  {{ end }}
+
+  {{ if or .Site.Params.algoliaSearch.enable .Site.Params.localSearch.enable }}
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse">
+        {{ if $ms.icons }}<i class="fa fa-search fa-fw hvr-icon"></i>{{ end }}{{ T "Sidebar.label.search" }}
+      </a>
+    </li>
+  {{ end }}
+  {{ if or .Site.Params.algoliaSearch.enable .Site.Params.localSearch.enable }}
+    <!-- 内嵌搜索框（桌面端）：输入即弹搜索浮层；移动端隐藏，保留上方图标按钮 -->
+    <li class="menu-item menu-item-inline-search">
+      <i class="fa fa-search" aria-hidden="true"></i>
+      <input type="search" id="inlineSearchInput" placeholder="{{ T "Sidebar.label.search" }}" autocomplete="off" aria-label="搜索">
+    </li>
+  {{ end }}
+  </ul>
+</nav>
+<style>
+.menu-item-inline-search { display: none !important; }
+@media (min-width: 992px) {
+  .menu-item-inline-search {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    margin-left: 4px;
+  }
+  .menu-item-inline-search i { font-size: .85em; opacity: .65; }
+  .menu-item-inline-search input {
+    width: 170px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(128,128,128,.5);
+    color: currentColor;
+    font-size: .85em;
+    padding: 3px 2px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .menu-item-inline-search input:focus { border-bottom-color: var(--text-color, #555); }
+  .menu-item-search { display: none !important; }
+}
+.menu-item-inline-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+</style>
+<script>
+(function () {
+  const wire = () => {
+    const el = document.getElementById('inlineSearchInput');
+    if (!el || el.dataset.bound) return;
+    el.dataset.bound = '1';
+    const popupInput = () => document.querySelector('.search-popup .search-input');
+    const ensureOpen = () => {
+      if (!document.body.classList.contains('search-active')) {
+        const trigger = document.querySelector('.popup-trigger');
+        if (trigger) trigger.click();
+      }
+    };
+    const sync = () => {
+      ensureOpen();
+      const pi = popupInput();
+      if (pi) {
+        pi.value = el.value;
+        pi.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    };
+    el.addEventListener('focus', sync);
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sync();
+        const pi = popupInput();
+        if (pi) { pi.focus(); pi.select(); }
+      }
+    });
+    el.addEventListener('input', () => {
+      if (document.body.classList.contains('search-active')) sync();
+    });
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wire);
+  } else {
+    wire();
+  }
+})();
+</script>
