@@ -1,4 +1,0 @@
-baseURL = 'https://xiaoxiaowei666.github.io/'
-locale = 'zh-cn'
-title = 'My New Hugo Project'
-theme = 'hugo-profile'

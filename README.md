@@ -29,10 +29,11 @@ GitHub Pages 只能托管**静态网页文件**（HTML/CSS/JS），而 Hugo 的�
 ## 日常写文章
 
 ```bash
-# 1. 新建文章（会在 content/blog/ 下生成模板）
-hugo new blog/我的文章.md
+# 1. 新建文章（会在 content/post/ 下生成模板）
+hugo new post/我的文章.md
 
 # 2. 用编辑器写内容，注意 front matter 中 draft 要设为 false 才会发布
+#    可选字段：categories/tags/series（系列）会自动生成对应页面
 
 # 3. 一键发布（构建 + 提交 public + 推送到线上）
 sh publish.sh "写完一篇文章"
@@ -40,6 +41,10 @@ sh publish.sh "写完一篇文章"
 # 4. 本地预览（可选，浏览器打开 http://localhost:1313）
 hugo server -D
 ```
+
+站点外观和所有配置都在 **hugo.yaml**（NexT 风格主题 hugo-next，注释全中文）。常见修改：
+- 头像/站点名：`hugo.yaml` 中 `avatar` / `title` / `author`
+- 换头像图：图片放到 `static/imgs/` 下，改 `avatar.url`
 
 > Windows 下用 `sh publish.sh`，别用 `./publish.sh`（避免脚本权限坑）。
 > `publish.sh` 不带参数也会发布，提交信息自动带时间戳。
@@ -74,10 +79,14 @@ hugo server -D
 ## 结构备忘
 
 ```
-hugo.toml            网站总配置（baseURL、标题、菜单、permalinks…）
-content/blog/        文章目录（Markdown）
-themes/hugo-profile/ 主题（直接入库，非 submodule）
-archetypes/          新建文章时的模板
+hugo.yaml            网站总配置（NexT 风格，注释全中文：菜单/侧栏/头像/社交…）
+content/post/        文章目录（Markdown）
+content/about/       关于页面
+content/archives/    归档页面
+themes/hugo-next/    NexT 风格主题（直接入库，非 submodule）
+layouts/partials/    自定义侧栏/页脚接口（空占位）
 publish.sh           一键构建 + 发布脚本
 public/              构建产物目录 = github.io 仓库副本（git 忽略）
 ```
+
+站点仿照 [xuqi2024.github.io](https://xuqi2024.github.io/)（Hexo NexT）的呈现形式，用 Hugo 生态的 hugo-next 主题复刻：顶部菜单（首页/归档/分类/系列/标签/关于）+ 侧边栏（头像/站点统计/社交链接）+ 经典文章流。
