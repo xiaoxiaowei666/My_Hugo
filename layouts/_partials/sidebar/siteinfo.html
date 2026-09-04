@@ -1,0 +1,21 @@
+{{ $scratch := partialCached "_funs/cal_siteinfo.html" . }}
+<div id="siteinfo-card-widget" class="sidebar-card-widget">
+  <div class="item-headline">
+    <i class="fas fa-chart-line"></i>
+    <span>{{ T "SiteInfoItems.title" }}</span>
+  </div>
+  <div class="siteinfo">
+    <div class="siteinfo-item">
+      <div class="item-name"><i class="fa-solid fa-calendar-check"></i>{{ T "SiteInfoItems.runTimes" }}</div>
+      <div class="item-count" id="runTimes" data-publishdate="{{ $scratch.Get "last" }}"></div>
+    </div>
+    <div class="siteinfo-item">
+      <div class="item-name"><i class="fa fa-font"></i>{{ T "SiteInfoItems.words" }}</div>
+      <div class="item-count" id="wordsCount" data-count="{{ $scratch.Get "totalWords" }}"></div>
+    </div>
+    <div class="siteinfo-item">
+      <div class="item-name"><i class="fa fa-clock-rotate-left"></i>{{ T "SiteInfoItems.lastUpdate" }}</div>
+      <div class="item-count" id="last-push-date" data-lastpushdate="{{ $scratch.Get "first" }}"></div>
+    </div>
+  </div>
+</div>
